@@ -11,10 +11,12 @@ import time
 import click
 
 @click.command()
-@click.option('-n', '--interval', default=2, help='Seconds to wait between updates.')
+@click.version_option(version=__version__)
+@click.option('-v', '--version', is_flag=True, help='Output version information and exit.')
+@click.option('-n', '--interval', default=2, help='Seconds to wait between updates.', type=float)
 @click.argument('command')
-def main(command, interval):
-    """Run the given command."""
+def main(command, interval, version):
+    """Run the given command until Ctrl-C is pressed."""
     clearScreen()
     commandStdOuput = ''
     try:
