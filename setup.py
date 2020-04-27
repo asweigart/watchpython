@@ -29,7 +29,7 @@ setup(
     #package_dir={'': 'src'},
     py_modules=['watchpython'],
     test_suite='tests',
-    install_requires=['click', 'colorama'],
+    install_requires=['click'],
     keywords='',
     entry_points='''
         [console_scripts]
