@@ -100,10 +100,24 @@ By Al Sweigart al@inventwithpython.com https://pypi.org/project/WatchPython/"""
                 if not no_title:
                     click.echo(getTitle(command, interval))
 
-                commandStdOutputLines = commandStdOutput.splitlines()
-                if len(commandStdOutputLines) > height and not full_text:
-                    # Only display one screenful of the output:
-                    click.echo('\n'.join(commandStdOutputLines[:height]), nl=False)
+                if not full_text:
+                    # If a single line is longer than the width of the
+                    # terminal, it's actually multiple lines for our
+                    # purposes of only displaying one screen of text.
+                    commandStdOutputLines = commandStdOutput.splitlines()
+                    numLines = 0
+                    for i, line in enumerate(commandStdOutputLines):
+                        finishedDisplayingOutput = False
+                        for i in range(0, len(line), width):
+                            # Print the "line" (without a newline because the last one shouldn't have a newline)
+                            click.echo(line[i:i + width], nl=False)
+                            numLines += 1
+                            if numLines == height:
+                                finishedDisplayingOutput = True
+                                break
+                            click.echo()  # Print a newline.
+                        if finishedDisplayingOutput:
+                            break
                 else:
                     # Display the full output:
                     click.echo(commandStdOutput, nl=False)
