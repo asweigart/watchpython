@@ -4,10 +4,17 @@ By Al Sweigart al@inventwithpython.com
 
 A re-implementation of the Unix watch command in Python.
 
-The windows binary can be downloaded from https://inventwithpython.com/watch.exe.
+The windows binary can be downloaded from https://inventwithpython.com/watch.exe
 
 I created this because the Cygwin watch command on Windows has weird
 display issues and doesn't seem to work right."""
+
+# NOTE TO SELF: I was only able to generate a Windows binary if I install
+# pyinstaller to Python 3.5 (it fails with Python 3.8 in a pipenv virtual environment)
+# and then run "pyinstaller.exe watchpython.spec --onefile" (be sure to use
+# the pyinstaller.exe for Python 3.5.) The watchpython.spec file is generated
+# from running "pyinstaller.exe watchpython.py --onefile" (though the binary
+# that generates doesn't work? For some reason?)
 
 
 """
@@ -27,7 +34,7 @@ List of differences between this implementation and the Unix watch command:
 - Probably some other minor things aren't supported either.
 """
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 import os
 import shutil
@@ -48,7 +55,9 @@ import click
 @click.option('-t', '--no-title', is_flag=True, help='Turn off header.')
 @click.argument('command')
 def main(command, beep, errexit, full_text, chgexit, interval, no_title):
-    """Repeatedly run the given command. Press Ctrl-C to quit."""
+    """Repeatedly run the given command. Press Ctrl-C to quit.
+
+By Al Sweigart al@inventwithpython.com https://pypi.org/project/WatchPython/"""
     clearScreen()
     commandStdOutput = ''
     doExit = False

@@ -7,7 +7,7 @@ scriptFolder = os.path.dirname(os.path.realpath(__file__))
 os.chdir(scriptFolder)
 
 # Find version info from module (without importing the module):
-with open('src/watchpython/__init__.py', 'r') as fo:
+with open('watchpython.py', 'r') as fo:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fo.read(), re.MULTILINE).group(1)
 
