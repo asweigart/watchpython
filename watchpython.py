@@ -14,12 +14,15 @@ import click
 @click.command()
 @click.version_option(version=__version__)
 @click.option('-b', '--beep', is_flag=True, help='Beep if command has a non-zero exit.')
+@click.option('-e', '--errexit', is_flag=True, help='Exit if command has a non-zero exit.')
 @click.option('-n', '--interval', default=2, help='Seconds to wait between updates.', type=float)
 @click.argument('command')
-def main(command, beep, interval):
+def main(command, beep, errexit, interval):
     """Run the given command until Ctrl-C is pressed."""
     clearScreen()
     commandStdOutput = ''
+    doExit = False
+    exitCode = 0
     try:
         while True:
             try:
@@ -31,6 +34,9 @@ def main(command, beep, interval):
                 # This code runs when the command returns a non-zero exit code:
                 if beep:
                     click.echo(chr(7))  # Play a beep noise.
+                if errexit:
+                    doExit = True
+                    exitCode = excObj.returncode
 
                 resultStdOut = excObj.stdout
 
@@ -39,6 +45,10 @@ def main(command, beep, interval):
                 clearScreen()
                 click.echo(commandStdOutput)
 
+            if doExit:
+                if exitCode != 0:
+                    click.echo('Command exited with a exit code: ' + str(exitCode))
+                sys.exit(exitCode)
             time.sleep(interval)
     except KeyboardInterrupt:
         sys.exit()
