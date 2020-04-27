@@ -52,9 +52,10 @@ def main(command, beep, errexit, full_text, chgexit, interval, no_title):
     doExit = False
     exitCode = 0
     isInitialOutput = True
+    prevWidth, prevHeight = shutil.get_terminal_size()  # Used to detect if the terminal window was resized.
     try:
         while True:
-            height = shutil.get_terminal_size()[1]  # Get the height of the terminal window.
+            width, height = shutil.get_terminal_size()  # Get the size of the terminal window.
             if not no_title:
                 height -= 1  # Adjust height for the line the header takes up.
 
@@ -75,8 +76,8 @@ def main(command, beep, errexit, full_text, chgexit, interval, no_title):
 
                 resultStdOut = excObj.stdout
 
-            if resultStdOut != commandStdOutput:
-                # Refresh the screen if the command output has changed:
+            if resultStdOut != commandStdOutput or (width, height) != (prevWidth, prevHeight):
+                # Refresh the screen if the command output has changed, or the terminal was resized:
                 commandStdOutput = resultStdOut
                 clearScreen()
                 if not no_title:
@@ -94,15 +95,15 @@ def main(command, beep, errexit, full_text, chgexit, interval, no_title):
                     # Exit when chgexit is set and the command output has changed:
                     doExit = True
 
-
             if doExit:
                 # Terminate watchpython:
                 if exitCode != 0:
                     click.echo('Command exited with a exit code: ' + str(exitCode))
                 sys.exit(exitCode)
 
+            # Do a bunh of post-command actions before looping back:
+            prevWidth, prevHeight = width, height
             isInitialOutput = False  # Set to False after the first time the command is run.
-
             time.sleep(interval)  # Pause in between running commands.
     except KeyboardInterrupt:
         sys.exit()
