@@ -1,5 +1,25 @@
-# WatchPython
-# By Al Sweigart al@inventwithpython.com
+"""WatchPython
+By Al Sweigart al@inventwithpython.com
+
+A re-implementation of the Unix watch command in Python."""
+
+
+"""
+List of differences between this implementation and the Unix watch command:
+
+- Doesn't use curses, so the original terminal text isn't restored after this
+  program terminates.
+- If there's more output than the terminal height can handle, only one
+  screenful of text is displayed. If -f is specified, than the full text
+  is displayed by the terminal window will scroll down the to the bottom.
+- The timestamp in the title bar shows the last time the command was run
+  AND changed text, not just the last time the command was run.
+- --color and color output isn't supported.
+- --differences and difference highlighting isn't supported.
+- --precise isn't supported.
+- --exec isn't supported.
+- Probably some other minor things aren't supported either.
+"""
 
 __version__ = '0.1.0'
 
