@@ -34,10 +34,11 @@ List of differences between this implementation and the Unix watch command:
 - Probably some other minor things aren't supported either.
 """
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import time
@@ -72,7 +73,12 @@ By Al Sweigart al@inventwithpython.com https://pypi.org/project/WatchPython/"""
 
             try:
                 result = subprocess.run(
-                    command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, shell=True, check=True
+                    command,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    universal_newlines=True,
+                    shell=True,
+                    check=True,
                 )
                 resultStdOut = result.stdout
                 exitCode = 0  # No need to set this to result.returncode because if it wasn't 0, CalledProcessError would have been raised.
@@ -132,20 +138,6 @@ def clearScreen():
         os.system('clear')  # macOS and Linux use the clear command.
 
 
-def getHostname():
-    """Return a string of the computer's hostname, obtained by runnning the
-    `hostname` command. Returns a blank string if it was unable to do so."""
-
-    try:
-        result = subprocess.run(
-            'hostname', stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, shell=True, check=True
-        )
-    except subprocess.CalledProcessError:
-        return ''
-
-    return result.stdout.strip()
-
-
 def getTitle(command, interval):
     """Return a string of to use for the title at the top."""
     width = shutil.get_terminal_size()[0]  # Get the width of the terminal window.
@@ -157,7 +149,7 @@ def getTitle(command, interval):
     commandMsg = command + ' '  # Add a space after the message.
 
     # Get the host and timestamp message:
-    hostname = getHostname()
+    hostname = socket.gethostname()
     if hostname != '':
         hostAndTimeMsg = hostname + ': ' + time.strftime('%c')
     else:
@@ -166,7 +158,7 @@ def getTitle(command, interval):
     # If the terminal window isn't wide enough, truncate commandMsg:
     spaceForCommandMsg = width - (len(intervalMsg) + len(hostAndTimeMsg))
     if spaceForCommandMsg < len(commandMsg) and spaceForCommandMsg >= 4:
-        commandMsg = commandMsg[:spaceForCommandMsg - 4] + '... '
+        commandMsg = commandMsg[: spaceForCommandMsg - 4] + '... '
     elif spaceForCommandMsg < len(commandMsg):
         commandMsg = ''
 
@@ -183,10 +175,6 @@ def getTitle(command, interval):
         return intervalMsg + commandMsg + hostAndTimeMsg.rjust(width - (len(intervalMsg) + len(commandMsg)))
     else:
         return intervalMsg + commandMsg + hostAndTimeMsg
-
-
-
-
 
 
 if __name__ == '__main__':
