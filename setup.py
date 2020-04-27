@@ -25,11 +25,16 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='MIT',
-    packages=find_packages(where='src'),
-    package_dir={'': 'src'},
+    #packages=find_packages(where='src'),
+    #package_dir={'': 'src'},
+    py_modules=['watchpython'],
     test_suite='tests',
-    install_requires=[],
+    install_requires=['click', 'colorama'],
     keywords='',
+    entry_points='''
+        [console_scripts]
+        watchpython=watchpython:main
+    ''',
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
