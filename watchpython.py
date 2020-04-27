@@ -1,7 +1,10 @@
 """WatchPython
 By Al Sweigart al@inventwithpython.com
 
-A re-implementation of the Unix watch command in Python."""
+A re-implementation of the Unix watch command in Python.
+
+I created this because the Cygwin watch command on Windows has weird
+display issues and doesn't seem to work right."""
 
 
 """
@@ -36,12 +39,13 @@ import click
 @click.version_option(version=__version__)
 @click.option('-b', '--beep', is_flag=True, help='Beep if command has a non-zero exit.')
 @click.option('-e', '--errexit', is_flag=True, help='Exit if command has a non-zero exit.')
+@click.option('-f', '--full-text', is_flag=True, help='Display full text even if it\'s more than one screen long.')
 @click.option('-g', '--chgexit', is_flag=True, help='Exit when output from command changes.')
 @click.option('-n', '--interval', default=2.0, help='Seconds to wait between updates.')
 @click.option('-t', '--no-title', is_flag=True, help='Turn off header.')
 @click.argument('command')
-def main(command, beep, errexit, chgexit, interval, no_title):
-    """Run the given command until Ctrl-C is pressed."""
+def main(command, beep, errexit, full_text, chgexit, interval, no_title):
+    """Repeatedly run the given command. Press Ctrl-C to quit."""
     clearScreen()
     commandStdOutput = ''
     doExit = False
@@ -49,6 +53,10 @@ def main(command, beep, errexit, chgexit, interval, no_title):
     isInitialOutput = True
     try:
         while True:
+            height = shutil.get_terminal_size()[1]  # Get the height of the terminal window.
+            if not no_title:
+                height -= 1  # Adjust height for the line the header takes up.
+
             try:
                 result = subprocess.run(
                     command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, shell=True, check=True
@@ -72,7 +80,14 @@ def main(command, beep, errexit, chgexit, interval, no_title):
                 clearScreen()
                 if not no_title:
                     click.echo(getTitle(command, interval))
-                click.echo(commandStdOutput)  # Display the command output.
+
+                commandStdOutputLines = commandStdOutput.splitlines()
+                if len(commandStdOutputLines) > height and not full_text:
+                    # Only display one screenful of the output:
+                    click.echo('\n'.join(commandStdOutputLines[:height]), nl=False)
+                else:
+                    # Display the full output:
+                    click.echo(commandStdOutput, nl=False)
 
                 if not isInitialOutput and chgexit:
                     # Exit when chgexit is set and the command output has changed:
@@ -120,7 +135,7 @@ def getHostname():
 
 def getTitle(command, interval):
     """Return a string of to use for the title at the top."""
-    width = shutil.get_terminal_size()[0]
+    width = shutil.get_terminal_size()[0]  # Get the width of the terminal window.
 
     # Get the interval message:
     intervalMsg = 'Every ' + str(interval) + 's: '
