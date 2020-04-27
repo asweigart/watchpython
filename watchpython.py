@@ -110,7 +110,7 @@ By Al Sweigart al@inventwithpython.com https://pypi.org/project/WatchPython/"""
                         finishedDisplayingOutput = False
                         for i in range(0, len(line), width):
                             # Print the "line" (without a newline because the last one shouldn't have a newline)
-                            click.echo(line[i:i + width], nl=False)
+                            click.echo(line[i : i + width], nl=False)
                             numLines += 1
                             if numLines == height:
                                 finishedDisplayingOutput = True
