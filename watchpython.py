@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """WatchPython
 By Al Sweigart al@inventwithpython.com
 
