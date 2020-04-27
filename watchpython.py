@@ -4,6 +4,8 @@ By Al Sweigart al@inventwithpython.com
 
 A re-implementation of the Unix watch command in Python.
 
+The windows binary can be downloaded from https://inventwithpython.com/watch.exe.
+
 I created this because the Cygwin watch command on Windows has weird
 display issues and doesn't seem to work right."""
 
