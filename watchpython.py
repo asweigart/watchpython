@@ -132,7 +132,7 @@ By Al Sweigart al@inventwithpython.com https://pypi.org/project/WatchPython/"""
                     click.echo('Command exited with a exit code: ' + str(exitCode))
                 sys.exit(exitCode)
 
-            # Do a bunh of post-command actions before looping back:
+            # Do a bunch of post-command actions before looping back:
             prevWidth, prevHeight = width, height
             isInitialOutput = False  # Set to False after the first time the command is run.
             time.sleep(interval)  # Pause in between running commands.
