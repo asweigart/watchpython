@@ -34,7 +34,7 @@ List of differences between this implementation and the Unix watch command:
 - Probably some other minor things aren't supported either.
 """
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 import os
 import shutil
