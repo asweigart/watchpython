@@ -23,3 +23,10 @@ display issues and doesn't seem to work right.
       -n, --interval FLOAT  Seconds to wait between updates.
       -t, --no-title        Turn off header.
       --help                Show this message and exit.
+
+
+
+Support
+-------
+
+If you find this project helpful and would like to support its development, [consider donating to its creator on Patreon](https://www.patreon.com/AlSweigart).
